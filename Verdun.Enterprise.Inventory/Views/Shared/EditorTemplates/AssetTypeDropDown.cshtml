@@ -1,0 +1,7 @@
+﻿@model InvAssetType
+
+@(Html.Kendo().DropDownListFor(m => m)        
+        .DataValueField("AssetTypeId")
+        .DataTextField("AssetTypeName")
+        .BindTo((System.Collections.IEnumerable)ViewData["assetTypes"])
+)

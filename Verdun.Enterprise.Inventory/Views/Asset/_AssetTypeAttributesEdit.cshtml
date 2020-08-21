@@ -1,0 +1,63 @@
+﻿@model IList<AssetTypeAttributeViewModel>
+<!--It needs IEnumerable to serilize -->
+
+@if (Model != null && Model.Count > 0)
+{
+    <div>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+        <div class="form-group">
+            @if (Model[i].AttributeDataType == "boolean")
+            {
+                @:<label name="@Model[i].InvAttributeName" class="control-label">@Model[i].InvAttributeName</label>
+                if (Model[i].InvAttributeValue == "true")
+                {
+                    @:<input type="checkbox" name="@Model[i].InvAttributeId" style="width:auto;margin-left:10px" checked="checked"/>
+                }
+                else
+                {
+                    @:<input type="checkbox" name="@Model[i].InvAttributeId" style="width:auto;margin-left:10px" />
+                }
+            }
+            else if (Model[i].AttributeDataType == "int")
+            {
+                @:<label name="@Model[i].InvAttributeName" class="control-label">@Model[i].InvAttributeName : @Model[i].UnitOfMeasurement</label>
+                @:<input name="@Model[i].InvAttributeId" class="form-control" value="@Model[i].InvAttributeValue" onkeypress="isNumberKey(this);" />
+            }
+            else
+            {
+                @:<label name="@Model[i].InvAttributeName" class="control-label">@Model[i].InvAttributeName </label>
+                @:<input name="@Model[i].InvAttributeId" class="form-control" value="@Model[i].InvAttributeValue" />
+            }
+        </div>
+        }
+    </div>
+}
+
+<script type="text/javascript">
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        console.log('--event=' + event + ', key code:' + event.charCode);
+        console.log('--event clicked:' + charCode);
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            alert('This field must be A number.')
+            //prevent letters are typed in
+            event.preventDefault();
+            return false;
+        }
+
+        return true;
+    }
+
+    //other way to call a function
+    $(document).on("click", "[type='checkbox']", function (e) {
+        if (this.checked) {
+            $(this).attr("value", "true");
+        } else {
+            $(this).attr("value", "false");
+        }
+    });
+</script>
+
+
+

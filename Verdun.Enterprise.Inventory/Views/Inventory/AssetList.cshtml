@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Verdun.Enterprise.Inventory.Models.InvAsset>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Asset List</h1>
+
+@*<p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+
+
+@(Html.Kendo().Grid<InvAsset>(Model)
+        .Name("gridMaterial")
+        .Columns(columns =>
+        {
+            columns.Bound(a => a.AssetName).Title("<strong>Asset Name</strong>").Width(250);
+            columns.Bound(a => a.AssetDescription).Title("<strong>Description</strong>").Width(200);
+            columns.Bound(a => a.QuantityOnHand).Title("<strong>Quantity</strong>").Width(100);
+            columns.Bound(a => a.SerialNumber).Title("<strong>Serial #</strong>").Width(100);
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(200);
+        })
+        .ToolBar(toolbar => { toolbar.Create(); } )
+        .Editable(editable => editable.Mode(GridEditMode.InLine).ConfirmDelete("Material").DisplayDeleteConfirmation("Are you sure to delete this material?"))
+        .Pageable()
+        .Sortable()
+        .Scrollable()
+        .Filterable()
+        .HtmlAttributes(new { style = "height:550px;" })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)            
+            .Events(events => events.Error("error_handler"))
+            .Model(model => model.Id(m => m.AssetId ))
+            .Create(c => c.Action("EditingInline_Create", "EnterpriseApplication"))
+            .Read(read => read.Action("EditingInline_Read", "EnterpriseApplication"))
+            .Update(update => update.Action("EditingInline_Update", "EnterpriseApplication"))
+            .Destroy(d => d.Action("EditingInline_Destroy", "EnterpriseApplication"))
+            .ServerOperation(false)             //--this is needed when no session cache is using.
+        )
+        .Scrollable()
+        .Pageable(pageable => pageable
+               .Refresh(true)
+               .ButtonCount(5)
+               .PageSizes(new[] { 5, 15, 21 })
+         ) // Enable paging.
+    )
+
+<br />
+
+<a class="k-primary" id="listAction" asp-action="SearchAsset" asp-route-AssetTypeId="">Asset Detail</a>
+<br />
+@*@(Html.Kendo().Button()
+                    .Name("AssetDetail")
+                    .HtmlAttributes(new { type = "button", @class = "k-primary" })
+                    .Content("Asset Detail"))*@
+
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+            //when there is an error, cancel the action. By JC on 07/30/2020
+            $("#gridMaterial").data("kendoGrid").cancelChanges();
+        }
+    }
+</script>
+
+
+
+@*<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AssetTypeName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssetTypeName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.AssetTypeId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.AssetTypeId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.AssetTypeId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@

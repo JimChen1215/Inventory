@@ -1,0 +1,92 @@
+﻿@model IList<AssetTypeAttributeViewModel>
+<!--It needs IEnumerable to serilize -->
+
+@if (Model != null && Model.Count > 0)
+{
+    <div>
+        <input type="hidden" name="AssetTypeName" value="@Model[0].AssetTypeName" />
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            //var inpName = Model[i].InvAttributeName + Model[i].InvAttributeId;
+            <div class="form-group">
+                @if (Model[i].AttributeDataType == "boolean")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName</label>
+                    @:<input type="checkbox" name="@Model[i].InvAttributeId" value="false" style="width:auto;margin-left:10px" />
+                }
+                else if (Model[i].AttributeDataType == "int")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName : @Model[i].UnitOfMeasurement </label>
+                    @:<input class="form-control" name="@Model[i].InvAttributeId" onkeypress="isNumberKey(this);" />
+                }
+                else if (Model[i].AttributeDataType == "Date")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName </label>
+                    @(Html.Kendo().DatePicker()
+                      .Name("" + Model[i].InvAttributeId)
+                      //.Value(DateTime.Today)
+                      .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
+                    )
+                }
+                else if (Model[i].AttributeDataType == "ControlData")
+                {
+                    //Dictionary<int, List<InvAttributeControlData>> myDict = (Dictionary<int, List<InvAttributeControlData>>) ViewData["ControlDataLists"];
+                    //IEnumerable<InvAttributeControlData> ctrlData = (IEnumerable<InvAttributeControlData>) myDict[(int)Model[i].InvAttributeId];
+
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName </label>            
+                    @(Html.Kendo().DropDownList()
+                        .Name(""+Model[i].InvAttributeId)
+                        .DataValueField("AttributeControlDataId")
+                        .DataTextField("ControlDataValue")
+                        .BindTo(Model[i].ControlDataList)
+                        .OptionLabel("")
+                        .HtmlAttributes(new { style = "width: 100%" })
+                     )
+                }
+                else
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName </label>
+                    @:<input class="form-control" name="@Model[i].InvAttributeId" />
+                }
+            </div>
+        }
+    </div>
+}
+
+<script type="text/javascript">
+    function isNumberKey(event) {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        console.log('--event=' + event + ', key code:' + event.charCode);
+        console.log('--event clicked:' + charCode);
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            alert('This field must be A number.')
+            //prevent letters are typed in
+            event.preventDefault();
+            return false;
+        }
+
+        return true;
+    }    
+
+    //other way to call a function
+    $(document).on("click", "[type='checkbox']", function (e) {
+        if (this.checked) {
+            $(this).attr("value", "true");
+        } else {
+            $(this).attr("value", "false");
+        }
+    });
+</script>
+
+@*<div class="">
+        @foreach(var item in Model)
+        {
+        <div class="form-group">
+            <div class="form-group">
+                <label class="control-label">@item.InvAttributeName</label>
+                <input name="@item.InvAttributeName + @item.InvAttributeId" class="form-control" />
+            </div>
+        </div>
+        }
+    </div>*@
+

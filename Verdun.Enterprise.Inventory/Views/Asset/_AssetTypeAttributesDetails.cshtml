@@ -1,0 +1,28 @@
+﻿@model IList<AssetTypeAttributeViewModel>
+<!--It needs IEnumerable to serilize -->
+
+@if (Model != null && Model.Count > 0)
+{
+    <dl class="row">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+
+        @*if (Model[i].AttributeDataType == "int")
+        {
+        @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName : @Model[i].UnitOfMeasurement </label>
+        @:<input class="form-control" name="@Model[i].InvAttributeId" onkeypress="isNumberKey(this);" />
+        }*@
+
+        <dt class="col-sm-6">
+            <label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName</label>
+        </dt>
+        <dd class="col-sm-6">
+            <label class="control-label" name="@Model[i].InvAttributeId">@Model[i].InvAttributeValue</label>
+        </dd>
+
+        }
+    </dl>
+}
+
+
+

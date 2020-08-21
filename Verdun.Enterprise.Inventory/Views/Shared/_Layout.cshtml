@@ -1,0 +1,159 @@
+﻿@*@inject ISecurityUserAppRoleService securityService;*@
+@{
+    string projName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+    string userName = User.Identity==null? "Guest" : User.Identity.Name;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @projName</title>
+
+    <!-- Development: using local static files -->
+    <environment include="Development">
+        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <!--Added by JC on 07/22/2020 for Telerik version: 2020.2.617.
+        bootstrap css only works on layout.cshtml; Kendo bootstrap only works on their components
+        Note: metro is the theme style file -->
+        <link href="~/lib/kendo-ui/styles/kendo.bootstrap-v4.min.css" rel="stylesheet" />
+        <link href="~/lib/kendo-ui/styles/kendo.metro.min.css" rel="stylesheet" />
+        <script src="~/lib/kendo-ui/js/jquery.min.js"></script>
+        <script src="~/lib/kendo-ui/js/kendo.all.min.js"></script>
+        <script src="~/lib/kendo-ui/js/kendo.aspnetmvc.min.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <!-- Telerik ToExcel -->
+        <script src="~/lib/kendo-ui/js/jszip.min.js"></script>
+    </environment>
+    <!-- Staging or Production: download static files from CDN -->
+    <environment exclude="Development">
+        <link rel="stylesheet"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true" />
+        <!-- telerik kendo UI css, js files-->
+        <link rel="stylesheet"
+              href="https://kendo.cdn.telerik.com/2020.2.617/styles/kendo.bootstrap-v4.min.css"
+              asp-fallback-href="~/lib/kendo-ui/styles/kendo.bootstrap-v4.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true" />
+        <link rel="stylesheet"
+              href="https://kendo.cdn.telerik.com/2020.2.617/styles/kendo.metro.min.css"
+              asp-fallback-href="~/lib/kendo-ui/styles/kendo.metro.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true" />
+        <link rel="stylesheet"
+              href="https://kendo.cdn.telerik.com/2020.2.617/styles/kendo.datavis.metro.min.css"
+              asp-fallback-href="~/lib/kendo-ui/styles/kendo.metro.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true" />
+        <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jquery.min.js"
+                asp-fallback-src="~/lib/kendo-ui/js/jquery.min.js"
+                asp-fallback-test="window.jQuery"></script>
+        <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.all.min.js"
+                asp-fallback-src="~/lib/kendo-ui/js/kendo.all.min.js"
+                asp-fallback-test="window.jQuery"></script>
+        <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.aspnetmvc.min.js"
+                asp-fallback-src="~/lib/kendo-ui/js/kendo.aspnetmvc.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+    </environment>
+
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+<body>
+    <header>
+        <!--Bootstrap 4.3.1  Customized navbar for Verdun Oil -->
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-light navbar-light">
+            <div class="container">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="navbar-brand" asp-area="" asp-controller="Asset" asp-action="Index">
+                            <img src="~/images/Verdun-Oil-Co-Logo.png" alt="logo" style="width:180px;" asp-append-version="true">
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav flex-column justify-content-end">
+                    <li class="nav-item">
+                        Welcome: @userName
+                    </li>
+                    <li class="nav-item">
+                        Date: @DateTime.Now.ToShortDateString()
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Default: navbar-light bg-white -->
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-dark navbar-dark border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Asset" asp-action="Index">
+                    @projName
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Inventory" asp-action="Index">Inventory Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Asset" asp-action="Index">Asset Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @*<li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Inventory Management
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" asp-area="" asp-controller="Inventory" asp-action="Index">Asset Type List</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Inventory" asp-action="AssetList">AssetList</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Asset" asp-action="Index">Asset Management</a>                                
+                            </div>
+                        </li>*@
+                    </ul>
+                </div>
+
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!--Adding text-light by JC on 07/15/2020-->
+    <footer class="border-top footer bg-dark">
+        <div class="container text-light">
+            &copy; 2020 - @projName - <a class="text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <!--- Removed due to Telerik
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>---->
+    <!--But this js file is required for Dropdown action-->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

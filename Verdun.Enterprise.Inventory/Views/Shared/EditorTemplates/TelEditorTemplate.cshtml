@@ -1,0 +1,10 @@
+﻿@model string
+<!-- This pattern is from Oreilly book. Allow 10 digits number, leading 1 is optional, (xxx)333-4444 format is optional-->
+<div class="k-input k-textbox">
+    @(Html.Kendo().TextBoxFor(m=>m)
+        .HtmlAttributes(new { type = "tel", pattern= @"^(?:\+?1[-.●]?)?\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
+            , style = "width: 100%"
+            , validationMessage = "A phone number must be 10 digits. It can be formatted as +1(222)333-4444"
+        })
+    )
+</div>

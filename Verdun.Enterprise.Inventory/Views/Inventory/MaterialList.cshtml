@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Verdun.Enterprise.Inventory.Models.InvAssetType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Asset Type List</h1>
+
+<script type="text/x-kendo-tmpl" id="template">
+    <div class="product">
+        <h4>#=AssetTypeName#</h4>
+    </div>
+</script>
+
+@(Html.Kendo().ListView<InvAssetType>(Model) // The ListView will be initially bound to the Model which is the Products table.
+    .Name("AssetTypeName") // The name of the ListView is mandatory. It specifies the "id" attribute of the widget.
+    .TagName("div") // The tag name of the ListView is mandatory. It specifies the element which wraps all ListView items.
+    .ClientTemplateId("template") // This template will be used for rendering the ListView items.
+    .Scrollable()
+    .Selectable(ListViewSelectionMode.Single) // Set selection mode to multiple
+    .HtmlAttributes(new { style = "height:350px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("Read", "ListView"))
+        //.PageSize(21)
+    ) // The DataSource configuration. It will be used on paging.
+    //.Events(e=>e.Change("onChange").DataBound("onDataBound"))
+    //.Pageable(pageable => pageable
+    //       .Refresh(true)
+    //       .ButtonCount(5)
+    //       .PageSizes(new[] { 5, 15, 21 })
+    // ) // Enable paging.
+)
+<br />
+
+<br />
+@(Html.Kendo().Button()
+                    .Name("SearchAsset")
+                    .HtmlAttributes(new { type = "button", @class = "k-primary" })
+                    .Content("Search Asset")
+                    )
+
+<script>
+    function onChange(arg) {
+        var selected = $.map(this.select(), function (item) {
+            return $(item).text();
+        });
+
+        kendoConsole.log("Selected: " + selected.length + " item(s), [" + selected.join(", ") + "]");
+    }
+
+    function onDataBound(arg) {
+        kendoConsole.log("ListView data bound");
+        //$(#listAction)
+    }
+</script>
+
+
+@*<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AssetTypeName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssetTypeName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.AssetTypeId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.AssetTypeId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.AssetTypeId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@

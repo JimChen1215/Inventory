@@ -1,0 +1,91 @@
+﻿@model AssetViewModel
+
+@{
+    ViewData["Title"] = "Add Asset";
+}
+
+<legend>Create an Asset</legend>
+<h5>Select an asset type</h5>
+<hr />
+<form asp-action="Create" method="post">
+    <div class="group-form-row row">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" id="assetTypeId">
+                <label asp-for="AssetTypeId" class="control-label" data-val-required="true"></label>
+                <select asp-for="AssetTypeId" class="form-control" asp-items="ViewBag.AssetTypeId"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AssetName" class="control-label" data-val-required="true"></label>
+                <input asp-for="AssetName" class="form-control" />
+                <span asp-validation-for="AssetName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Brand" class="control-label" data-val-required="true"></label>
+                <input asp-for="Brand" class="form-control" />
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssetDescription" class="control-label"></label>
+                <input asp-for="AssetDescription" class="form-control" />
+                <span asp-validation-for="AssetDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuantityOnHand" class="control-label"></label>
+                <input asp-for="QuantityOnHand" class="form-control" />
+                <span asp-validation-for="QuantityOnHand" class="text-danger"></span>
+            </div>
+
+
+        </div>
+        <div class="col-md-6">
+            <div id="partialAttr"></div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="form-group">
+            <input type="submit" value="Create" class="k-primary" />
+        </div>
+    </div>
+</form>
+
+<div class="form-group row">   
+    <a asp-action="Index">Back to List</a>
+    @*<a class="k-button k-button-icontext" href="Index">Back to List</a>*@
+</div>
+
+<script type="text/javascript">
+    //Add a asterisk
+    $('[data-val-required]').append('<span style="color:red; vertical-align: middle;"> *</span>');
+
+    $('#AssetTypeId').on("change", function onChange() {
+        var selectedText = $("#AssetTypeId option:selected").text();
+        var selectedVal = $("#AssetTypeId").val();
+        console.log('--create view selected AssetTypeId=' + selectedVal + ', text=' + selectedText);
+        //Make an ajax call its load corresponding attributes
+        $.ajax(
+            {
+                url: '/Asset/GetAssetTypeAttributes?assetTypeId=' + selectedVal,
+                type: 'GET',
+                data: "",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    //console.log('*****ajax data*****' + data);
+                    $("#partialAttr").html(data);
+
+                },
+                error: function (jqXhr, txtStatus, errorThrown) {
+                    console.log('--response header:' + jqXhr.getAllResponseHeaders());
+                    console.log('--status:' + txtStatus);
+                    console.log('--error:' + errorThrown);
+                    //alert("error");
+                }
+            });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
