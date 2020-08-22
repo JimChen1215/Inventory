@@ -25,10 +25,12 @@ namespace Verdun.Enterprise.Inventory.Controllers
             _session = httpContextAccessor.HttpContext.Session;
         }
 
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(Json(await _context.InvAssetType.ToListAsync()));            
-        //}
+        //For testing purpose
+        public async Task<IActionResult> KendoJQuery()
+        {
+            return View(Json(await _context.InvAssetType.ToListAsync()));
+        }
+
         public IActionResult Index()
         {
             List<AssetTypeAttributeViewModel> attrList = _invService.GetAssetAttributesByAssetType(1).ToList();
