@@ -1,0 +1,68 @@
+﻿@model IList<AssetTypeAttributeViewModel>
+<!--It needs IEnumerable to serilize -->
+
+@if (Model != null && Model.Count > 0)
+{
+    <div>
+        <input type="hidden" name="AssetTypeName" value="@Model[0].AssetTypeName" />
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            if (Model[i].InvAttributeName.StartsWith("SubType") || Model[i].InvAttributeName.StartsWith("Size") ||
+                Model[i].InvAttributeName.StartsWith("PressureRating") || Model[i].InvAttributeName.StartsWith("IsNACE") )
+            {
+            <div class="form-group">
+                
+                @if (Model[i].AttributeDataType == "boolean")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName</label>
+                    @:<input type="checkbox" name="@Model[i].InvAttributeId" value="false" style="width:auto;margin-left:10px" />
+                }
+                else if (Model[i].AttributeDataType == "int")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName : @Model[i].UnitOfMeasurement </label>
+                    @:<input class="form-control" type="number" name="@Model[i].InvAttributeId"  onkeyup="isNumberKey(this);" />
+                }
+                else if (Model[i].AttributeDataType == "Date")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName </label>
+                    @(Html.Kendo().DatePicker()
+                          .Name("" + Model[i].InvAttributeId)
+                          //.Value(DateTime.Today)
+                          .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
+                    )
+                }
+                else if (Model[i].AttributeDataType == "ControlData")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName </label>            
+                    @(Html.Kendo().DropDownList()
+                            .Name("" + Model[i].InvAttributeId)
+                            .DataValueField("AttributeControlDataId")
+                            .DataTextField("ControlDataValue")
+                            .BindTo(Model[i].ControlDataList)
+                            .OptionLabel("")
+                            .HtmlAttributes(new { style = "width: 100%" })
+                     )
+                }
+                else
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName </label>
+                    @:<input class="form-control" name="@Model[i].InvAttributeId" />
+                }
+            </div>
+            }
+        }
+    </div>
+}
+
+@*<div class="">
+        @foreach(var item in Model)
+        {
+        <div class="form-group">
+            <div class="form-group">
+                <label class="control-label">@item.InvAttributeName</label>
+                <input name="@item.InvAttributeName + @item.InvAttributeId" class="form-control" />
+            </div>
+        </div>
+        }
+    </div>*@
+
