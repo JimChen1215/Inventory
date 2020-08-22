@@ -12,7 +12,7 @@
                 @:<label name="@Model[i].InvAttributeName" class="control-label">@Model[i].InvAttributeName</label>
                 if (Model[i].InvAttributeValue == "true")
                 {
-                    @:<input type="checkbox" name="@Model[i].InvAttributeId" style="width:auto;margin-left:10px" checked="checked"/>
+                    @:<input type="checkbox" name="@Model[i].InvAttributeId" style="width:auto;margin-left:10px" checked="checked" />
                 }
                 else
                 {
@@ -22,7 +22,28 @@
             else if (Model[i].AttributeDataType == "int")
             {
                 @:<label name="@Model[i].InvAttributeName" class="control-label">@Model[i].InvAttributeName : @Model[i].UnitOfMeasurement</label>
-                @:<input name="@Model[i].InvAttributeId" class="form-control" value="@Model[i].InvAttributeValue" onkeypress="isNumberKey(this);" />
+                @:<input name="@Model[i].InvAttributeId" class="form-control" value="@Model[i].InvAttributeValue" type="number" onkeyup="isNumberKey(this);" />
+            }
+            else if (Model[i].AttributeDataType == "Date")
+            {
+                @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName</label>
+                @(Html.Kendo().DatePicker()
+                      .Name("" + Model[i].InvAttributeId)
+                      .Value(Model[i].InvAttributeValue)
+                      .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
+                    )
+            }
+            else if (Model[i].AttributeDataType == "ControlData")
+            {
+                @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName</label>
+                @(Html.Kendo().DropDownList()
+                        .Name(""+Model[i].InvAttributeId)
+                        .DataValueField("AttributeControlDataId")
+                        .DataTextField("ControlDataValue")
+                        .BindTo(Model[i].ControlDataList)
+                        .Value(Model[i].InvAttributeValue)
+                        .HtmlAttributes(new { style = "width: 100%" })
+                     )
             }
             else
             {
@@ -34,30 +55,6 @@
     </div>
 }
 
-<script type="text/javascript">
-    function isNumberKey(evt) {
-        var charCode = (evt.which) ? evt.which : event.keyCode;
-        console.log('--event=' + event + ', key code:' + event.charCode);
-        console.log('--event clicked:' + charCode);
-        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-            alert('This field must be A number.')
-            //prevent letters are typed in
-            event.preventDefault();
-            return false;
-        }
-
-        return true;
-    }
-
-    //other way to call a function
-    $(document).on("click", "[type='checkbox']", function (e) {
-        if (this.checked) {
-            $(this).attr("value", "true");
-        } else {
-            $(this).attr("value", "false");
-        }
-    });
-</script>
 
 
 

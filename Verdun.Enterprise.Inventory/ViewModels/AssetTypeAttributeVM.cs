@@ -15,9 +15,6 @@ namespace Verdun.Enterprise.Inventory.ViewModels
         public string AssetTypeName { get; set; }
         public string InvAttributeName { get; set; }        
         public string AttributeDataType { get; set; }
-        public string UnitOfMeasurement { get; set; }
-        //control data
-        //public int? AttributeControlDataId { get; set; }
-        //public string ControlDataValue { get; set; }
+        public string UnitOfMeasurement { get; set; }       
     }
 }

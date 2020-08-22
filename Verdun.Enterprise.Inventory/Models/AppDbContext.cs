@@ -16,8 +16,7 @@ namespace Verdun.Enterprise.Inventory.Models
 
         // View Model
         public virtual DbSet<AssetViewModel> vmAsset { get; set; }       
-        public virtual DbSet<AssetTypeAttributeViewModel> vmAssetTypeAttribute { get; set; }
-        public virtual DbSet<AssetAttributeValueVM> vmAssetAttributeValue { get; set; }
+        public virtual DbSet<AssetTypeAttributeViewModel> vmAssetTypeAttribute { get; set; }        
         public virtual DbSet<AssetTypeAttributeVM> vmAssetTypeAttributeNew { get; set; }
 
         //Real Tables
@@ -39,16 +38,11 @@ namespace Verdun.Enterprise.Inventory.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-    
-            //ViewModels only for SPs
-            modelBuilder.Entity<AssetAttributeValueVM>().HasNoKey();
-            modelBuilder.Entity<AssetTypeAttributeVM>().HasNoKey();
-            modelBuilder.Entity<AssetTypeAttributeViewModel>().HasNoKey();
-            modelBuilder.Entity<AssetViewModel>().HasNoKey();
 
-            //OnModelCreatingPartial(modelBuilder);
-        }
-
-        //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+            //ViewModels are needed but only for SPs. When there is key, it may try to map to other tables.
+            modelBuilder.Entity<AssetTypeAttributeVM>().HasNoKey();  
+            modelBuilder.Entity<AssetTypeAttributeViewModel>().HasNoKey(); 
+            modelBuilder.Entity<AssetViewModel>().HasNoKey(); 
+        }       
     }
 }

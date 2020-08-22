@@ -56,27 +56,26 @@ namespace Verdun.Enterprise.Inventory.Models
             return ctrlList;
         }
 
-        public Dictionary<int, List<InvAttributeControlData>> GetAttributeControlDataWithDefault()
-        {
-            Dictionary<int, List<InvAttributeControlData>> myDict = new Dictionary<int, List<InvAttributeControlData>>();
-            List<InvAttribute> attrList = _context.InvAttribute.Where(a => a.DataType == "ControlData").ToList();
-            //List<InvAttributeControlData> ctrlList = _context.InvAttributeControlData.Include(d => d.Attribute).Where(d => d.Attribute.DataType == "ControlData").AsNoTracking().ToList();
-
-            foreach (var attr in attrList)
-            {
-                List<InvAttributeControlData> ctrlList = _context.InvAttributeControlData.Where(d => d.AttributeId == attr.AttributeId).ToList();
-                //Add a default
-                InvAttributeControlData defaultCtrl = new InvAttributeControlData()
-                {
-                    AttributeControlDataId = 0,
-                    AttributeId = 0,
-                    ControlDataValue = ""
-                };
-                ctrlList.Insert(0, defaultCtrl);
-                myDict.Add(attr.AttributeId, ctrlList);
-            }
-            return myDict;
-        }
+        //public Dictionary<int, List<InvAttributeControlData>> GetAttributeControlDataWithDefault()
+        //{
+        //    Dictionary<int, List<InvAttributeControlData>> myDict = new Dictionary<int, List<InvAttributeControlData>>();
+        //    List<InvAttribute> attrList = _context.InvAttribute.Where(a => a.DataType == "ControlData").ToList();
+            
+        //    foreach (var attr in attrList)
+        //    {
+        //        List<InvAttributeControlData> ctrlList = _context.InvAttributeControlData.Where(d => d.AttributeId == attr.AttributeId).ToList();
+        //        //Add a default
+        //        InvAttributeControlData defaultCtrl = new InvAttributeControlData()
+        //        {
+        //            AttributeControlDataId = 0,
+        //            AttributeId = 0,
+        //            ControlDataValue = ""
+        //        };
+        //        ctrlList.Insert(0, defaultCtrl);
+        //        myDict.Add(attr.AttributeId, ctrlList);
+        //    }
+        //    return myDict;
+        //}
 
         //Get attributes and possible control values at one time
         public IEnumerable<AssetTypeAttributeViewModel> GetAssetAttributesByAssetType(int assetTypeId)
@@ -104,19 +103,7 @@ namespace Verdun.Enterprise.Inventory.Models
                 ctrlList = _context.InvAttributeControlData.ToList();
             }
             // 2. Get possible control data list
-            foreach(var item in result)
-            {
-                if (item.AttributeDataType=="ControlData") {
-                    item.ControlDataList = ctrlList.Where(d => d.AttributeId == item.InvAttributeId).ToList();
-                    InvAttributeControlData defaultCtrl = new InvAttributeControlData()
-                    {
-                        AttributeControlDataId = 0,
-                        AttributeId = 0,
-                        ControlDataValue = ""
-                    };
-                    item.ControlDataList.Insert(0, defaultCtrl);
-                }
-            }
+            FillControlDataList4EachAttribute(result, ctrlList);
             return result;
         }
 
@@ -169,26 +156,40 @@ namespace Verdun.Enterprise.Inventory.Models
 
         public IEnumerable<AssetTypeAttributeViewModel> GetAssetAttributeValuesForEdit(int assetId)
         {
-            IEnumerable<AssetTypeAttributeViewModel> result = null;
-
-            var param = new SqlParameter("@assetId", assetId);
-            IEnumerable<AssetAttributeValueVM> resultDummy = _context.vmAssetAttributeValue.FromSqlRaw<AssetAttributeValueVM>
-                    ($"dbo.upInvGetAssetAttributesForEditByAssetId @assetId", param).ToList();
-            if (resultDummy != null)
+            IEnumerable<AssetTypeAttributeViewModel> result = null;                        
+            List<InvAttributeControlData> ctrlList = null;
+            // 1. Get attribute list
+            using (_context)
             {
-                result = resultDummy.Select(t => new AssetTypeAttributeViewModel
-                {
-                    AssetTypeAttributeId = t.AssetTypeAttributeId,
-                    AssetTypeId = t.AssetTypeId,
-                    AssetTypeName = t.AssetTypeName,
-                    InvAttributeId = t.InvAttributeId,
-                    InvAttributeName = t.InvAttributeName,
-                    InvAttributeValue = t.InvAttributeValue,
-                    AttributeDataType = t.AttributeDataType,
-                    UnitOfMeasurement = t.UnitOfMeasurement,
-                }).ToList();
+                var param = new SqlParameter("@assetId", assetId);
+                result = _context.vmAssetTypeAttribute.FromSqlRaw<AssetTypeAttributeViewModel>
+                    ($"dbo.upInvGetAssetAttributesForEditByAssetId @assetId", param).ToList();                
+                ctrlList = _context.InvAttributeControlData.ToList();
             }
+            // 2. Get possible control data list
+            FillControlDataList4EachAttribute(result, ctrlList);
             return result;
+        }
+
+        private void FillControlDataList4EachAttribute(IEnumerable<AssetTypeAttributeViewModel> result, List<InvAttributeControlData> ctrlList)
+        {
+            if (result == null || ctrlList == null)
+                return;
+
+            foreach (var item in result)
+            {
+                if (item.AttributeDataType == "ControlData")
+                {
+                    item.ControlDataList = ctrlList.Where(d => d.AttributeId == item.InvAttributeId).ToList();
+                    InvAttributeControlData defaultCtrl = new InvAttributeControlData()
+                    {
+                        AttributeControlDataId = 0,
+                        AttributeId = 0,
+                        ControlDataValue = ""
+                    };
+                    item.ControlDataList.Insert(0, defaultCtrl);
+                }
+            }
         }
 
         public AssetViewModel GetAssetForEdit(int assetId)
@@ -201,6 +202,7 @@ namespace Verdun.Enterprise.Inventory.Models
             return asset;
         }
 
+        //------------- CRUD functions ----------------------------
     public void Create(AssetViewModel asset)
         {
             try
@@ -221,8 +223,12 @@ namespace Verdun.Enterprise.Inventory.Models
                     entity.AssetDescription = asset.AssetDescription;
                     entity.Brand = asset.Brand;
                     entity.QuantityOnHand = asset.QuantityOnHand;
+                    entity.Notes = asset.Notes;
+                    //entity.IsDeleted = false;
                     entity.CreatedBy = _webUser;
                     entity.CreatedDate = DateTime.Now;
+                    entity.ModifiedBy = _webUser;
+                    entity.ModifiedDate = DateTime.Now;
                     _context.InvAsset.Add(entity);
                     _context.SaveChanges();
 
@@ -272,6 +278,7 @@ namespace Verdun.Enterprise.Inventory.Models
                     target.AssetDescription = asset.AssetDescription;
                     target.Brand = asset.Brand;
                     target.QuantityOnHand = asset.QuantityOnHand;
+                    target.Notes = asset.Notes;
                     target.ModifiedBy = _webUser;
                     target.ModifiedDate = DateTime.Now;                  
 
@@ -303,22 +310,24 @@ namespace Verdun.Enterprise.Inventory.Models
             {
                 using (_context)
                 {
-                    //1. Remove all attributes belong to this Asset in attributeValue table first
-                    var attrList = _context.InvAssetAttributeValue.Where(a => a.AssetId == asset.AssetId).ToList();
-                    if (attrList != null && attrList.Count > 0)
-                    {
-                        foreach (var attr in attrList)
-                        {                            
-                            _context.InvAssetAttributeValue.Remove(attr);                            
-                        }
-                    }
+                    ////1. Remove all attributes belong to this Asset in attributeValue table first
+                    //var attrList = _context.InvAssetAttributeValue.Where(a => a.AssetId == asset.AssetId).ToList();
+                    //if (attrList != null && attrList.Count > 0)
+                    //{
+                    //    foreach (var attr in attrList)
+                    //    {                            
+                    //        _context.InvAssetAttributeValue.Remove(attr);                            
+                    //    }
+                    //}
 
-                    //2. Update values in base table
+                    //2. Update values in base table. Only mark IsDeleted due to soft deletion. 08/21/2020
                     var target = _context.InvAsset.FirstOrDefault(a => a.AssetId == asset.AssetId);
                     if (target != null)
                     {
-                        _context.InvAsset.Remove(target);
-                    }                                       
+                        //_context.InvAsset.Remove(target);
+                        target.IsDeleted = true;
+                    }
+
                     _context.SaveChanges();
                 }
             }

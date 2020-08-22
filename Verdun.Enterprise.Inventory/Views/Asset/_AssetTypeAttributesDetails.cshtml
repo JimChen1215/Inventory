@@ -6,20 +6,31 @@
     <dl class="row">
         @for (int i = 0; i < Model.Count; i++)
         {
+            <dt class="col-sm-6">
+                <label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName</label>
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model[i].AttributeDataType == "int")
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeId">@Model[i].InvAttributeValue  @Model[i].UnitOfMeasurement</label>
 
-        @*if (Model[i].AttributeDataType == "int")
-        {
-        @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName : @Model[i].UnitOfMeasurement </label>
-        @:<input class="form-control" name="@Model[i].InvAttributeId" onkeypress="isNumberKey(this);" />
-        }*@
+                }
+                else if (Model[i].AttributeDataType == "ControlData")
+                {
+                    string ctrlVal = "";
+                    if (Model[i].InvAttributeValue != null)
+                    {
+                        var ctrlItem = Model[i].ControlDataList.Where(d => "" + d.AttributeControlDataId == Model[i].InvAttributeValue).ToList<InvAttributeControlData>().FirstOrDefault();
+                        ctrlVal = ctrlItem.ControlDataValue;
+                    }
 
-        <dt class="col-sm-6">
-            <label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName</label>
-        </dt>
-        <dd class="col-sm-6">
-            <label class="control-label" name="@Model[i].InvAttributeId">@Model[i].InvAttributeValue</label>
-        </dd>
-
+                    @:<label class="control-label" name="@Model[i].InvAttributeId">@ctrlVal </label>                
+                }                
+                else
+                {
+                    @:<label class="control-label" name="@Model[i].InvAttributeId">@Model[i].InvAttributeValue</label>
+                }
+            </dd>
         }
     </dl>
 }

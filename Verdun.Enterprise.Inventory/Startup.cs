@@ -72,7 +72,7 @@ namespace Verdun.Enterprise.Inventory
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Asset}/{action=Index}/{id?}");
+                    pattern: "{controller=Inventory}/{action=Index}/{id?}");
             });
         }
     }

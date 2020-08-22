@@ -77,7 +77,7 @@
             <div class="container">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="navbar-brand" asp-area="" asp-controller="Asset" asp-action="Index">
+                        <a class="navbar-brand" asp-area="" asp-controller="Inventory" asp-action="Index">
                             <img src="~/images/Verdun-Oil-Co-Logo.png" alt="logo" style="width:180px;" asp-append-version="true">
                         </a>
                     </li>
@@ -95,7 +95,7 @@
         <!-- Default: navbar-light bg-white -->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-dark navbar-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Asset" asp-action="Index">
+                <a class="navbar-brand" asp-area="" asp-controller="Inventory" asp-action="Index">
                     @projName
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -113,9 +113,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        </li>*@
                         @*<li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Inventory Management
@@ -152,7 +152,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>---->
     <!--But this js file is required for Dropdown action-->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/js/InputValidation.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

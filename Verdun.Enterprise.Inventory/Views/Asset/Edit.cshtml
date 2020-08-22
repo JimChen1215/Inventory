@@ -4,8 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<legend>Edit</legend>
-
+<legend>Update Asset</legend>
 <hr />
 <form asp-action="Edit" method="post">
     <div class="group-form-row row">
@@ -37,6 +36,11 @@
                 <input asp-for="QuantityOnHand" class="form-control" />
                 <span asp-validation-for="QuantityOnHand" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Notes" class="control-label"></label>
+                <textarea asp-for="Notes" class="form-control"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
         </div>
         <div class="col-md-6">
             <div id="partialAttr">
@@ -45,11 +49,15 @@
         </div>        
     </div>
     <div class="form-group row">
-        <input type="submit" value="Save" class="k-primary" />
+        <input type="submit" value="Update" class="k-primary" />
+        
     </div>
 </form>
 
 <div class="form-group row">
+    <a asp-action="Delete" asp-route-assetId="@Model.AssetId">Delete Asset</a>     
+</div>
+<div class="form-group row">    
     <a asp-action="Index">Back to List</a>
 </div>
 

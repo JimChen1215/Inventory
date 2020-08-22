@@ -5,25 +5,25 @@
 }
 
 <legend>Asset Management</legend>
-
-<div class="k-content" id="divAssetIndex">
+<h4>The top 20 assets created recently</h4>
+<div id="divAssetIndex">
     <form asp-controller="Asset" asp-action="Edit" method="Get">
         @(Html.Kendo().Grid<AssetViewModel>(Model)
                 .Name("gridAsset")
                 .Columns(columns =>
                 {
                     columns.Bound(a => a.AssetName).Title("<strong>Asset Name</strong>").Width(250).Locked(true).Lockable(false);
-                    //columns.Bound(a => a.AssetDescription).Title("<strong>Description</strong>").Width(200);
                     columns.Bound(a => a.AssetTypeName).Title("<strong>Asset Type</strong>").Width(200);
                     //columns.Bound(a => a.AssetType).ClientTemplate("#=AssetType.AssetTypeName#").Sortable(false).Title("<strong>AssetType</strong>").Width(200);   //customized dropdown
-                    columns.Bound(a => a.Brand).Title("<strong>Brand</strong>").Width(150);
-                    columns.Bound(a => a.QuantityOnHand).Title("<strong>Quantity</strong>").Width(150);
+                    columns.Bound(a => a.Brand).Title("<strong>Brand</strong>").Width(200);
+                    columns.Bound(a => a.QuantityOnHand).Title("<strong>Quantity</strong>").Width(200);
+                    columns.Bound(a => a.AssetDescription).Title("<strong>Description</strong>").Width(200);
                     //columns.Bound(a => a.SerialNumber).Title("<strong>Serial Number</strong>").Width(150);
                     //columns.Bound(a => a.ModelName).Title("<strong>Model</strong>").Width(150);
                     //columns.Bound(a => a.ModelNumber).Title("<strong>Model Number</strong>").Width(100);
-                    columns.Command(command => { command.Edit(); command.Destroy(); }).Width(230);
+                    //columns.Command(command => { command.Edit(); }).Width(150);
                 })
-                .ToolBar(toolbar => { toolbar.Create(); })
+                //.ToolBar(toolbar => { toolbar.Create(); })
                 .Editable(editable => editable.Mode(GridEditMode.PopUp).ConfirmDelete("Asset").DisplayDeleteConfirmation("Are you sure to delete this asset?"))
                 .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
                 .Pageable()
@@ -35,7 +35,7 @@
                 .HtmlAttributes(new { style = "height:600px;" })
                 .DataSource(dataSource => dataSource
                     .Ajax()
-                    .PageSize(20)
+                    .PageSize(50)
                     .Events(events => events.Error("error_handler") )
                     .Model(model => {
                         model.Id(m => m.AssetId);
@@ -51,12 +51,14 @@
             .Events(e => e.Change("onChange"))
         )
         <br />
-        <input type="hidden" id="myId" name="assetId" value="0" />
-        <input type="submit" value="Select to Update" class="k-primary" />
+        <div class="form-group row">
+            <input type="hidden" id="myId" name="assetId" value="0" />
+            <input type="submit" value="Select to Update" class="k-primary" />
+        </div>
     </form>
 
     <br />
-    <div>
+    <div class="form-group row">
         <a asp-action="Create">Create a New Asset</a>
         @*<a class="k-button k-button-icontext" href="Asset/Create">Create Asset</a>*@
     </div>

@@ -17,7 +17,7 @@
                 else if (Model[i].AttributeDataType == "int")
                 {
                     @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName : @Model[i].UnitOfMeasurement </label>
-                    @:<input class="form-control" name="@Model[i].InvAttributeId" onkeypress="isNumberKey(this);" />
+                    @:<input class="form-control" name="@Model[i].InvAttributeId" type="number" onkeyup="isNumberKey(this);" />
                 }
                 else if (Model[i].AttributeDataType == "Date")
                 {
@@ -29,10 +29,7 @@
                     )
                 }
                 else if (Model[i].AttributeDataType == "ControlData")
-                {
-                    //Dictionary<int, List<InvAttributeControlData>> myDict = (Dictionary<int, List<InvAttributeControlData>>) ViewData["ControlDataLists"];
-                    //IEnumerable<InvAttributeControlData> ctrlData = (IEnumerable<InvAttributeControlData>) myDict[(int)Model[i].InvAttributeId];
-
+                {                    
                     @:<label class="control-label" name="@Model[i].InvAttributeName">@Model[i].InvAttributeName </label>            
                     @(Html.Kendo().DropDownList()
                         .Name(""+Model[i].InvAttributeId)
@@ -53,11 +50,12 @@
     </div>
 }
 
-<script type="text/javascript">
+
+@*<script type="text/javascript">
     function isNumberKey(event) {
         var charCode = (event.which) ? event.which : event.keyCode;
-        console.log('--event=' + event + ', key code:' + event.charCode);
-        console.log('--event clicked:' + charCode);
+        //console.log('--event=' + event + ', key code:' + event.charCode);
+        //console.log('--event clicked:' + charCode);
         if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
             alert('This field must be A number.')
             //prevent letters are typed in
@@ -76,7 +74,7 @@
             $(this).attr("value", "false");
         }
     });
-</script>
+</script>*@
 
 @*<div class="">
         @foreach(var item in Model)

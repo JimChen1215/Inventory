@@ -15,9 +15,9 @@ namespace Verdun.Enterprise.Inventory.Models
         IEnumerable<AssetTypeAttributeViewModel> GetAssetAttributeValuesForEdit(int assetId);
 
         IEnumerable<InvAttributeControlData> GetAttributeControlDataWithDefault(int attributeId);
-        Dictionary<int, List<InvAttributeControlData>> GetAttributeControlDataWithDefault();
-        void Create(AssetViewModel user);
-        void Update(AssetViewModel user);
-        void Destroy(AssetViewModel user);
+        //Dictionary<int, List<InvAttributeControlData>> GetAttributeControlDataWithDefault();
+        void Create(AssetViewModel asset);
+        void Update(AssetViewModel asset);
+        void Destroy(AssetViewModel asset);
     }
 }

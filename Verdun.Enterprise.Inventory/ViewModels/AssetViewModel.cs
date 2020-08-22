@@ -6,7 +6,7 @@ using Verdun.Enterprise.Inventory.Models;
 
 namespace Verdun.Enterprise.Inventory.ViewModels
 {    
-    [NotMapped]
+    [NotMapped]    
     public class AssetViewModel
     {
         //public AssetViewModel()
@@ -16,18 +16,27 @@ namespace Verdun.Enterprise.Inventory.ViewModels
 
         //[Key]
         public int AssetId { get; set; }
-        [Required]        
+        [Required] 
+        [Display(Name ="Asset Type")]
         public int? AssetTypeId { get; set; }
         [Required]
         [MaxLength(100, ErrorMessage ="Name cannot exceed 100 characters")]
+        [Display(Name = "Asset Name")]
         public string AssetName { get; set; }
         [Required]
-        [MaxLength(10, ErrorMessage = "Name cannot exceed 100 characters")]
+        [MaxLength(100, ErrorMessage = "Brand cannot exceed 100 characters")]
         public string Brand { get; set; }
+
+        [Display(Name = "Asset Description")]
         public string AssetDescription { get; set; }
+
         [Range(0, 1000.00, ErrorMessage ="Number cannot exceeed 1000.00")]
+        [Display(Name = "Quantity on Hand")]
         public decimal? QuantityOnHand { get; set; }
-        
+
+        [MaxLength(500, ErrorMessage = "Notes cannot exceed 500 characters")]
+        public string Notes { get; set; }
+
         public string ModelName { get; set; }
         public string ModelNumber { get; set; }
         public string SerialNumber { get; set; }

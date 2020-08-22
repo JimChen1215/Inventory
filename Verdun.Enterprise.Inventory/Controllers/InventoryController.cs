@@ -2,34 +2,54 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Verdun.Enterprise.Inventory.Models;
+using Verdun.Enterprise.Inventory.ViewModels;
 
 namespace Verdun.Enterprise.Inventory.Controllers
 {
     public class InventoryController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IAssetService _invService;
+        private readonly ISession _session;
 
-        public InventoryController(AppDbContext context)
+        public InventoryController(AppDbContext context, IAssetService assetService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _invService = assetService;
+            _session = httpContextAccessor.HttpContext.Session;
         }
 
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(Json(await _context.InvAssetType.ToListAsync()));            
+        //}
+        public IActionResult Index()
         {
-            //return View(Json(await _context.InvAssetType.ToListAsync()));
-            return View(await _context.InvAssetType.ToListAsync());
+            List<AssetTypeAttributeViewModel> attrList = _invService.GetAssetAttributesByAssetType(1).ToList();
+            InventoryViewModel vmAsset = new InventoryViewModel();
+            vmAsset.AssetTypeAttributeList = attrList;
+
+            MakeAssetTypeSelectList(0);
+            return View(vmAsset);
+        }
+        private void MakeAssetTypeSelectList(int selectedType)
+        {
+            var assetTypes = _invService.GetAssetTypesWithDefault();
+            if (selectedType > 0)
+                ViewData["AssetTypeId"] = new SelectList(assetTypes, "AssetTypeId", "AssetTypeName", selectedType);
+            else
+                ViewData["AssetTypeId"] = new SelectList(assetTypes, "AssetTypeId", "AssetTypeName");
         }
 
         //[HttpGet]
         public async Task<IActionResult> SearchAsset(int assetTypeId)
-        {
-            
-
+        {            
             //OK in EF CORE but fails on client side in json conversion                  
             var assets = await _context.InvAsset.Where(a=>a.AssetTypeId == assetTypeId).ToListAsync();
             return View("SearchAssetList", assets);

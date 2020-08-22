@@ -32,6 +32,7 @@ namespace Verdun.Enterprise.Inventory.Models
         public DateTime? CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public bool IsDeleted { get; set; }
 
         [UIHint("AssetTypeDropDown")]
         public virtual InvAssetType AssetType { get; set; }
