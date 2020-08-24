@@ -1,0 +1,121 @@
+﻿
+
+<legend>Kendo UI jQuery Grid</legend>
+
+<div>
+    <div id="myGrid"></div>
+</div>
+
+<script type="text/x-kendo-template" id="template">
+    <div class="k-toolbar">     
+        <a href="/Asset/Create"><strong>Create Asset<span class="k-icon k-i-plus"></span></strong></a>
+    </div>    
+</script>
+
+@section Scripts {
+
+    <script>
+        var myDataSource;
+        $(document).ready(function () {
+
+            myDataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        async: false,
+                        cache: false,
+                        url: "@Url.Action("GetAssetData", "Asset")",
+                        dataType:"json",
+                    },
+                },
+                batch: true,
+                pageSize: 20,
+                schema: {
+                    model: {
+                        id: "assetId", fields: {
+                            assetName: { type: "string" },
+                            assetTypeName: { type: "string" },
+                            brand: { type: "string" },
+                            quantityOnHand: { type: "number" },
+                        }
+                    }
+                }
+            });
+
+            var grid = $("#myGrid").kendoGrid({
+                dataSource: myDataSource,
+                autoBind: false,
+                filterable: true,
+                sortable: true,
+                pageable: true,
+                height: 650,
+                toolbar: kendo.template($("#template").html()),
+                    //[{ name: "Create", title: "", iconClass: "k-icon k-i-plus", click: onAddRow }],
+                columns: [
+                    { field: "assetName", title: "Asset Name", width: 250 },
+                    { field: "assetTypeName", title: "Asset Type"},
+                    { field: "brand", title: "Brand"},
+                    { field: "quantityOnHand", title: "Quantity" },
+                    {
+                        command: [
+                            { name: "Edit", text: " ", title: "", iconClass: "k-icon k-i-edit", click: onEditRow },
+                            { name: "Delete", text: " ", title: "", iconClass: "k-icon k-i-delete", click: onDeleteRow },
+                        ], title: "Command", width: 120
+                    }
+                ],
+            });
+
+            myDataSource.read();
+
+            //grid.find(".k-grid-toolbar").on("click", ".k-i-plus",  function (e) {
+            //    e.preventDefault();
+            //    console.log("***Create click***");
+            //    window.location.href = 'Create';
+            //});
+        });
+
+        function onAddRow(e) {
+            console.log("--Create click ");
+            window.location.href = 'Create';
+            //...
+            @* $.ajax({
+                url: "@Url.Action("AddMyTable", "Home")",
+                data: {
+                    tableID: 99,
+                }
+            });*@
+        }
+
+        function onEditRow(e) {
+            var dataRow = this.dataItem($(e.currentTarget).closest("tr"));
+            var assetId = dataRow["assetId"];
+            console.log("--Edit selected row: " + assetId);
+            window.location.href = 'Edit?assetId=' + assetId;
+            //...
+            @*$.ajax({
+                url: "@Url.Action("AddMyTable", "Home")",
+                data: {
+                    tableID: 99,
+                }
+            });*@
+        }
+
+        function onDeleteRow(e) {
+            var dataRow = this.dataItem($(e.currentTarget).closest("tr"));
+            var assetId = dataRow["assetId"];
+            console.log("--Delete selected row: " + assetId);
+            window.location.href = 'Delete?assetId=' + assetId;
+
+            //...
+            @*$.ajax({
+                url: "@Url.Action("DeleteMyTable", "Home")",
+                data: {
+                    tableID: 1,
+                },
+                success: function (e) {
+                    myDataSource.read();
+                }
+            });*@
+        }
+    </script>
+
+}
