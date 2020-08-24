@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Verdun.Enterprise.Inventory.Models;
+using Verdun.Enterprise.Inventory.Data;
 
 namespace Verdun.Enterprise.Inventory
 {
@@ -27,12 +27,11 @@ namespace Verdun.Enterprise.Inventory
         public void ConfigureServices(IServiceCollection services)
         {
             //Added by JC on 07/20/2020 for EFCore SQL
-            services.AddDbContextPool<AppDbContext>(
-                options => options.UseSqlServer(
-                    Configuration.GetConnectionString("VerdunDBStr")));
+            string connStr = Configuration.GetConnectionString("VerdunDBStr");
+            services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(connStr));
 
-            services.AddControllersWithViews()
-                .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+            services.AddControllersWithViews();
+            //    .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             //Added by JC on 07/16/2020
             services.AddKendo();

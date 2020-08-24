@@ -10,7 +10,7 @@
 <div>
     <hr />
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <dl class="row">
                 <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.AssetType)
@@ -53,7 +53,7 @@
                 </dd>
             </dl>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             @await Html.PartialAsync("_AssetTypeAttributesDetails", Model.AssetTypeAttributeList)
         </div>
     </div>
@@ -61,7 +61,7 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="AssetId" />
         <input type="submit" value="Delete Asset" class="btn btn-danger" /> |        
-        <a asp-action="Details" asp-route-assetId="@Model.AssetId">Back to Asset</a> |
+        <a asp-action="Details" asp-route-assetId="@Model.AssetId">Cancel - Back to Asset</a> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

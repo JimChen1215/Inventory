@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Verdun.Enterprise.Inventory.Data;
 using Verdun.Enterprise.Inventory.Models;
 using Verdun.Enterprise.Inventory.ViewModels;
 

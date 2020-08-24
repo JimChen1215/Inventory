@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Verdun.Enterprise.Inventory.Data;
 using Verdun.Enterprise.Inventory.Models;
 using Verdun.Enterprise.Inventory.ViewModels;
 
@@ -22,6 +23,17 @@ namespace Verdun.Enterprise.Inventory.Controllers
         {            
             _invService = assetService;
             _session = httpContextAccessor.HttpContext.Session; 
+        }
+
+        public IActionResult jQueryList()
+        {
+            //test KendUI jQeury grid
+            return View();
+        }
+        public JsonResult GetAssetData()
+        {
+            //test KendUI jQeury grid
+            return Json(_invService.GetBaseAssets());
         }
 
         public IActionResult Index()

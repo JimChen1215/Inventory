@@ -6,7 +6,7 @@
 
 <legend>Asset Management</legend>
 <h4>The top 20 assets created recently</h4>
-<div id="divAssetIndex">
+<div id="divAssetIndex" class="form-group row">
     <form asp-controller="Asset" asp-action="Edit" method="Get">
         @(Html.Kendo().Grid<AssetViewModel>(Model)
                 .Name("gridAsset")
@@ -17,13 +17,22 @@
                     //columns.Bound(a => a.AssetType).ClientTemplate("#=AssetType.AssetTypeName#").Sortable(false).Title("<strong>AssetType</strong>").Width(200);   //customized dropdown
                     columns.Bound(a => a.Brand).Title("<strong>Brand</strong>").Width(200);
                     columns.Bound(a => a.QuantityOnHand).Title("<strong>Quantity</strong>").Width(200);
-                    columns.Bound(a => a.AssetDescription).Title("<strong>Description</strong>").Width(200);
+                    columns.Bound(a => a.AssetDescription).Title("<strong>Description</strong>").Width(250);
                     //columns.Bound(a => a.SerialNumber).Title("<strong>Serial Number</strong>").Width(150);
                     //columns.Bound(a => a.ModelName).Title("<strong>Model</strong>").Width(150);
                     //columns.Bound(a => a.ModelNumber).Title("<strong>Model Number</strong>").Width(100);
-                    //columns.Command(command => { command.Edit(); }).Width(150);
+                    //columns.Command(command => { command.Edit(); command.Destroy(); }).Width(150);
+                    //columns.Command(command => { command.Custom("Edit").Click("editAsset"); command.Custom("Delete").Click("deleteAsset"); }).Width(220);
                 })
-                //.ToolBar(toolbar => { toolbar.Create(); })
+                //.ToolBar(toolbar => { toolbar.Create(); })  --- customize toolbar
+                @*.ToolBar(toolbar =>
+                {
+                    toolbar.ClientTemplate(@<text>
+                        <div class="refreshBtnContainer">
+                            <a href="\\Create" class="k-link k-button k-button-icon" title="Create"><span class="k-icon k-i-plus"></span>Create</a>
+                        </div>           
+                    </text>);
+                })*@
                 .Editable(editable => editable.Mode(GridEditMode.PopUp).ConfirmDelete("Asset").DisplayDeleteConfirmation("Are you sure to delete this asset?"))
                 .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
                 .Pageable()
@@ -58,7 +67,7 @@
     </form>
 
     <br />
-    <div class="form-group row">
+    <div class="group-form row">
         <a asp-action="Create">Create a New Asset</a>
         @*<a class="k-button k-button-icontext" href="Asset/Create">Create Asset</a>*@
     </div>
@@ -97,7 +106,7 @@
         }
         $('#myId').val(dataItem['AssetId']);
         //console.log("--selected asset id:"  + dataItem['AssetId']);
-        console.log('******onChange: Index view, selected asset id=' + $('#myId').val());
+        //console.log('******onChange: Index view, selected asset id=' + $('#myId').val());
 
         //var dblclickFlag = 'false';
         //$(selectedRow).on("dblclick", function (e) {
@@ -125,6 +134,35 @@
         console.log("-- double click id:" + selectedVal);
         console.log("-- double click id:" + dataItem['AssetId']);
     });
+
+    function editAsset(e) {        
+        e.preventDefault();
+        console.log("--Edit clicked--, e.data:" + e.data + ", row:" + e.dataRow + ", item:" + e.dataItem);
+
+        var selectedRow = this.select();
+        var dataItem = this.dataItem(selectedRow);
+        //var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var assetId = dataRow["assetId"];
+        console.log("--Edit selected row: " + assetId);
+        window.location.href = 'Edit?assetId=' + assetId;  
+        //var wnd = $("#Details").data("kendoWindow");
+
+        //wnd.content(detailsTemplate(dataItem));
+        //wnd.center().open();
+    }
+
+    function deleteAsset(e) {
+        e.preventDefault();
+        console.log("--Delete clicked--, e: " + e);
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var assetId = dataRow["assetId"];
+        console.log("--delete selected row: " + assetId);
+        window.location.href = 'Delete?assetId=' + assetId;
+        //var wnd = $("#Details").data("kendoWindow");
+
+        //wnd.content(detailsTemplate(dataItem));
+        //wnd.center().open();
+    }
 </script>
 
 

@@ -7,8 +7,8 @@
 <legend>Update Asset</legend>
 <hr />
 <form asp-action="Edit" method="post">
-    <div class="group-form-row row">
-        <div class="col-md-6">
+    <div class="group-form row">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="AssetId" />
             <input type="hidden" asp-for="AssetTypeName" />
@@ -42,7 +42,7 @@
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div id="partialAttr">
                 @await Html.PartialAsync("_AssetTypeAttributesEdit", Model.AssetTypeAttributeList)
             </div>
